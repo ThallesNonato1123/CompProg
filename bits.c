@@ -270,6 +270,13 @@ int32_t byteEmP(int32_t x, uint8_t p) {
  *
  */
 int32_t setaByteEmP(int32_t x, int32_t y, uint8_t p) {
+      /**
+     * A ideia de setaByte em P é retirar os bits de X no byte que a gente quer,  e depois somar com  o y shiftado para aquele byte. Para isso escolhemos o numero 255 
+     * que é 11111111 (8 bits, 1 byte) e shiftamos ele para o byte que desejamos "(p<<3) representa o byte que queremos chegar". Com o byte 11111111 aonde queremos, negamos ele
+     * pois assim  teremos todas os bits "1", excetuando da faixa de bits que nosso byte se encontra, aonde conterá 0. Fazendo AND de ~255 nessa faixa de bit com nosso numero x
+     * teremos esse mesmo numero, só que com a faixa de bit que queremos adicionar nosso novo byte zerada. Com isso só precisamos shiftar o nosso numero y até esse byte (p<<3) 
+     * e realizar a operação OR, setando assim nosso byte.
+     */
     return ( x & (~ (255 << (p << 3) )) ) | (y << (p << 3));
 }
 
