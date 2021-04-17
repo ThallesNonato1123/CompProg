@@ -223,7 +223,10 @@ int32_t byteEmP(int32_t x, uint8_t p) {
  *
  */
 int32_t setaByteEmP(int32_t x, int32_t y, uint8_t p) {
-    return 1;
+    return(x &(~(255<<(p<<3))))|y<<(p<<3);
+    
+    
+    //return(x &(~(255<<(p<<3))))|y<<(p<<3);
 }
 
 /*
@@ -262,7 +265,7 @@ int32_t minimo(int32_t x, int32_t y) {
  *
  */
 int32_t negacaoLogica(int32_t x) {
-  return (~x & 1);
+  return ((x>>31) | ((~x+1)>>31))+1;
 }
 
 void teste(int32_t saida, int32_t esperado) {
