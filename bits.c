@@ -20,9 +20,12 @@
  *      - As resoluções com menos operações do que a do monitor terão bonificação.
  *
  * Assinatura:
- *      Aluno: <nome>
- *      DRE: <DRE>
- *      versão do GCC utilizada: XXXX
+ *      Aluno: Felipe Melo e Thalles Nonato
+ * 
+ *      DRE:    Felipe:  119093752
+ *              Thalles: 119058809
+ * 
+ *      versão do GCC utilizada: 9.3.0
  *
  */
 
@@ -50,6 +53,13 @@
  *          ehPar(7) -> 0
  */
 int32_t ehPar(int32_t x) {
+    /**
+     * Ideia: operar X e 1 com AND. Como números pares em binário
+     * terminam necessariamente em zero, essa  operação se encarrega
+     * de comparar apenas o último  bit de X com 1. Se o LSB for 0,
+     * o número é par e caso contrário, ímpar. Para isso, 
+     * apenas negamos a expressão para obter a resposta correta.
+     */
     return !(x & 1);
 }
 
@@ -69,6 +79,11 @@ int32_t ehPar(int32_t x) {
  *          mod8(10) -> 2
  */
 int32_t mod8(int32_t x) {
+    /**
+     * Múltiplos de 8 em binário terminam em 000. Dessa forma,
+     * precisamos apenas realizar um AND entre X e 7, que em binário
+     * possui apenas os últimos três bits em 111 e o restante em zero.
+     */ 
     return (x & 7);
 }
 
@@ -86,8 +101,11 @@ int32_t mod8(int32_t x) {
  *          negativo(42) -> -42
  */
 int32_t negativo(int32_t x) {
-
-    return (~x + 1) ;
+    /**
+     * A ideia é inveter os bits do número e somar 1, o que
+     * é exatamente o complemento a dois do número X.
+     */
+    return (~x + 1);
 }
 
 /* Implementação do & usando bitwise
@@ -106,6 +124,11 @@ int32_t negativo(int32_t x) {
  *              11 & 1011 -> 0011
  */
 int32_t bitwiseAnd(int32_t x, int32_t y) {
+    /**
+     * Ideia: inverter os bits de X e Y e realizar um OR entre eles.
+     * Isso nos dará o resultado do bitwise AND com os bits invertidos,
+     * bastando apenas trocá-los.
+     */ 
     return ~(~x | ~y);
 }
 
@@ -123,7 +146,12 @@ int32_t bitwiseAnd(int32_t x, int32_t y) {
  *          ehIgual(16, 8) -> 0
  */
 int32_t ehIgual(int32_t x, int32_t y) {
-    return !(x^y);
+    /**
+     * Como o operador XOR nos retorna 1 somente no caso
+     * de os bits serem distintos, basta realizarmos a negação
+     * dessa operação.
+     */
+    return !(x ^ y);
 }
 
 /* Limpa bit n
@@ -141,8 +169,15 @@ int32_t ehIgual(int32_t x, int32_t y) {
  *          limpaBitN(3, 1) -> 1
  */
 int32_t limpaBitN(int32_t x, int8_t n) {
-
-    return (x & ~(1<<n));
+    /**
+     * Realizar um left shift com o bit 1 N vezes. Isso resultará
+     * em 1 seguido de N zeros. Depois, invertemos esses bits com o 
+     * operador ~, fazendo zero seguido de N 1's. Após isso, basta
+     * realizar a operção AND entre X e nosso shift, pois como o 
+     * shift possui zero apenas na posição em que queremos limpar e
+     * 1 nas outras posições, ele limpa o bit desejado preservando os restantes.
+     */
+    return (x & ~(1 << n));
 }
 
 /*
@@ -172,7 +207,13 @@ int32_t limpaBitN(int32_t x, int8_t n) {
  *
  */
 int32_t bitEmP(int32_t x, uint8_t p) {
-    return ((x>>p) & 1);
+    /**
+     * Fazemos um right shift P vezes em X, para fazer com que
+     * o bit desejado esteja na posição correta, no bit menos significativo. Após isso,
+     * basta realizar a operação AND com o bit 1, que nos
+     * retornará exatamente o bit na posição P do número X.
+     */
+    return ((x >> p) & 1);
 }
 
 /*
@@ -198,7 +239,13 @@ int32_t bitEmP(int32_t x, uint8_t p) {
  *
  */
 int32_t byteEmP(int32_t x, uint8_t p) {
-     return (x>>(p<<3) & 255);
+        /**
+     * A ideia para a resolução de byte em P consiste no fato qua ao invés de avançar de 1 em 1 bit como em "bit em p", precisamos percorrer 8 bits para chegar no proximo byte,
+     * para isso usamos um shift left de 3 em p, para avançar o byte desejado para os bits menos significativos. Após isso fazemos um AND com 255 (que são 8 bits "1" e o resto 0)
+     * para obter somente o byte desejado,já que zeraremos todos os outros valores a esquerda após o último 1.
+     * 
+     */
+    return (x >> (p << 3) & 255);
 }
 
 /*
@@ -223,10 +270,7 @@ int32_t byteEmP(int32_t x, uint8_t p) {
  *
  */
 int32_t setaByteEmP(int32_t x, int32_t y, uint8_t p) {
-    return(x &(~(255<<(p<<3))))|y<<(p<<3);
-    
-    
-    //return(x &(~(255<<(p<<3))))|y<<(p<<3);
+    return ( x & (~ (255 << (p << 3) )) ) | (y << (p << 3));
 }
 
 /*
@@ -246,11 +290,18 @@ int32_t setaByteEmP(int32_t x, int32_t y, uint8_t p) {
  *
  */
 int32_t minimo(int32_t x, int32_t y) {
-    return y^((x^y)& -(x<y));
+            /**
+     * A ideia para a resolução de obter o minimo parte do principio que para x<y retornar 1, mas como utilizamos o "-", o resultado será "-1", em binario 
+     * 1111111111...,quando operamos AND de 111111111 com (x^y), nos retorna o proprio x^y, então teremos y^x^y, que sabemos por algebra booleana que nos retornará
+     * x, já que y^x^y = x. O outro caso é quando x>y, nesse caso retornará 0 na nossa condicional. e teremos y^((x^y) & 0)  = y^0 , que também sabemos por 
+     * álgebra booleana que y^0 = y. 
+     */
+
+    return y ^ ((x ^ y) & -(x < y));
 }
 
 /*
- * Negação lógica sem !
+ * 
  *      Permitido:
  *          Operações: << >> | & + ~
  *
@@ -260,12 +311,22 @@ int32_t minimo(int32_t x, int32_t y) {
  *      Retorna 1 se x == 0, retorna 0 caso contrário
  *
  *      Exemplo:
- *          negacaoLogica(0) -> 1
- *          negacaoLogica(37) -> 0
+ *          
+ *          
  *
  */
 int32_t negacaoLogica(int32_t x) {
-  return ((x>>31) | ((~x+1)>>31))+1;
+  /**
+   * Precisamos nos atentar para os três casos possíveis. São
+   * eles: X positivo, X negativo e X nulo. Então a expressão
+   * x >> 31 nos retorna o MSB de X (se negativo, 1, se positivo, zero).
+   * A expressão ((~x + 1) >> 31) nos retorna o MSB do complemento 
+   * a 2 de X. Portanto, se X > 0, o OR entre as duas expressões nos 
+   * retorna 1 (negativo), da mesma forma que se X < 0, também nos retorna
+   *  1 (negativo). Se X = 0, temos zero como resultado. Dessa forma, basta
+   * somar 1 ao resultado para ajustar todos os casos.
+   */ 
+  return ( (x >> 31) | ((~x + 1) >> 31) ) + 1;
 }
 
 void teste(int32_t saida, int32_t esperado) {
