@@ -1,0 +1,18 @@
+INICIALIZA: 
+
+	0x129D e 0x12A3
+		pegamos a entrada e compara com zero (nulo em ASCII)
+		se for nula, executa de 0x12F2 até 0x131A (explodiria a bomba usando puts)
+
+	0x12AC até 0x12EE
+		parte em que lê as entradas (percebemos isso com o "sleep", que espera a próxima senha)
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+PRIMEIRA BOMBA: 
+
+	percebemos uma grande quantidade de comandos CMPL, sempre comparando %al com um hex
+	bastou procurar os representantes de cada hex na tabela ASCII para desvendar a primeira senha, que
+	é "Mab - 353 - 2020.1". Sabemos que ele lê caracter por caracter pois a instrução CMPL possui sempre
+	%AL como um de seus operandos, indicando que estamos lendo um byte (sizeof(char))
+
